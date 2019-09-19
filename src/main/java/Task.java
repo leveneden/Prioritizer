@@ -46,9 +46,9 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" +
-                "name='" + name + '\'' +
-                ", urgencyScore=" + urgencyScore +
-                ", importanceScore=" + importanceScore +
+                "name:'" + name + '\'' +
+                ", urgencyScore:" + urgencyScore +
+                ", importanceScore:" + importanceScore +
                 '}';
     }
 }

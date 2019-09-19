@@ -1,3 +1,6 @@
 public enum SearchCriteria {
-    DEFAULT, REVERSE, IMPORTANCE, URGENCY
+    DEFAULT,
+    REVERSE,
+    IMPORTANCE,
+    URGENCY
 }

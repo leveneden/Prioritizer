@@ -1,25 +1,21 @@
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Prioritizer {
 
-    public static final String TASKS_FILE = "src/main/resources/tasks.txt";
-    private BufferedReader bufferedReader;
+    private String tasksFilePath = "src/main/resources/tasks.json";
 
-    public void initializeBufferedReader() throws FileNotFoundException {
-        FileReader fileReader = new FileReader(TASKS_FILE);
-        bufferedReader = new BufferedReader(fileReader);
+    public Prioritizer() {}
+
+    public Prioritizer(String tasksFilePath) {
+        this.tasksFilePath = tasksFilePath;
     }
 
-    public void closeBufferedReader() throws IOException {
-        bufferedReader.close();
-    }
-
-    public void addTask() {
+    public void addTask(Task task) {
     }
 
     public void deleteTask() {
@@ -31,16 +27,12 @@ public class Prioritizer {
     public void changeTaskImportance() {
     }
 
-    public void listTasksBy(SearchCriteria criteria) throws IOException {
+    public void listTasksBy(SearchCriteria criteria) {
 
         List<Task> tasks = deserializeTasks();
 
-
-
         switch (criteria) {
             case DEFAULT:
-
-
                 break;
 
             case REVERSE:
@@ -52,48 +44,30 @@ public class Prioritizer {
             case IMPORTANCE:
                 break;
         }
-
-        closeBufferedReader();
     }
 
-    public void reviewTasks() {
-    }
 
-    public List<Task> deserializeTasks() throws IOException {
+    public List<Task> deserializeTasks() {
 
         ObjectMapper mapper = new ObjectMapper();
-        String jsonInput = "[{\"name\":\"clean up your room!\",\"urgencyScore\":2,\"importanceScore\":100}," +
-                "{\"name\":\"clean up your room!\",\"urgencyScore\":3,\"importanceScore\":100}," +
-                "{\"name\":\"clean up your room!\",\"urgencyScore\":4,\"importanceScore\":100}," +
-                "{\"name\":\"clean up your room!\",\"urgencyScore\":5,\"importanceScore\":100}]";
-        List<Task> taskList = mapper.readValue(jsonInput, new TypeReference<List<Task>>(){});
-
-        for (Task task: taskList) {
-            System.out.println(task);
-        }
-
-        String line = null;
-        initializeBufferedReader();
 
         try {
-            line = bufferedReader.readLine();
+            return mapper.readValue(
+                    FileUtils.readFileToString(new File(tasksFilePath), "utf-8"),
+                    new TypeReference<List<Task>>(){}
+                    );
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void saveTasks(List<Task> tasks) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File(tasksFilePath), tasks);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        while(line != null && !line.equals("") ) {
-            System.out.println(line);
-            line = bufferedReader.readLine();
-            // tasklist.add() [deserialize object from json]
-        }
-
-        // return list
-        return taskList;
-    }
-
-    public void saveTasks(List<Task> tasks) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        // write a whole serialized list into file instead of this:
-        mapper.writeValue(new File(Prioritizer.TASKS_FILE), Main.getTask());
     }
 }
