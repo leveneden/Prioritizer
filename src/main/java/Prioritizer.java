@@ -15,16 +15,28 @@ public class Prioritizer {
         this.tasksFilePath = tasksFilePath;
     }
 
-    public void addTask(Task task) {
+    public void setTasksFilePath(String tasksFilePath) {
+        this.tasksFilePath = tasksFilePath;
     }
 
-    public void deleteTask() {
+    public boolean addTask(String taskName) {
+        return false;
     }
 
-    public void changeTaskUrgency() {
+    public boolean deleteTask(String taskName) {
+        return false;
     }
 
-    public void changeTaskImportance() {
+    public boolean increaseTaskUrgency(String taskName, int urgencyDelta) {
+        return false;
+    }
+
+    public boolean increaseTaskImportance(String taskName, int importanceDelta) {
+        return false;
+    }
+
+    public Task findTask(String taskName) {
+        return null;
     }
 
     public void listTasksBy(SearchCriteria criteria) {
@@ -62,12 +74,14 @@ public class Prioritizer {
         }
     }
 
-    public void saveTasks(List<Task> tasks) {
+    public boolean saveTasks(List<Task> tasks) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             mapper.writeValue(new File(tasksFilePath), tasks);
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

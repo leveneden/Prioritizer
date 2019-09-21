@@ -6,15 +6,20 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class PrioritizerUnitTests {
 
     /*
-    Naming Convention:
-    MethodName_StateUnderTest_ExpectedBehavior
+     *  Naming Convention:
+     *  MethodName_StateUnderTest_ExpectedBehavior
      */
+
+    private Prioritizer prioritizer;
 
     @BeforeEach
     void setUp() {
+        prioritizer = new Prioritizer("src/test/resources/tasksMock.json");
         writeDefaultMockToFile();
     }
 
@@ -43,36 +48,106 @@ class PrioritizerUnitTests {
 
     // addTask()
     @Test
-    void addTask() {
+    void addTask_ExistsATaskWithSameNameAndSameCase_DoesntGetAddedAndReturnFalse() {
+    }
+
+    @Test
+    void addTask_TaskNameIsEmpty_DoesntGetAddedAndReturnFalse() {
+    }
+
+    @Test
+    void addTask_ExistsATaskWithSameNameAndDifferentCase_DoesntGetAddedAndReturnFalse() {
+    }
+
+    @Test
+    void addTask_DoesntExistATaskWithSameName_GetsAddedAndReturnTrue() {
     }
 
     // deleteTask()
     @Test
-    void deleteTask() {
+    void deleteTask_TaskExists_ReturnTrueAndGetsDeleted() {
     }
 
-    // changeTaskUrgency()
     @Test
-    void changeTaskUrgency() {
+    void deleteTask_TaskDoesntExist_ReturnFalse() {
     }
 
-    // changeTaskImportance()
+    // increaseTaskUrgency()
     @Test
-    void changeTaskImportance() {
+    void increaseTaskUrgency_TaskExists_TaskUrgencyGetsIncreasedByDeltaAndReturnTrue() {
+    }
+
+    @Test
+    void increaseTaskUrgency_TaskDoesntExist_TaskUrgencyDoesntGetIncreasedAndReturnFalse() {
+    }
+
+    // increaseTaskImportance()
+    @Test
+    void increaseTaskImportance_TaskExists_TaskImportanceGetsIncreasedByDeltaAndReturnTrue() {
+    }
+
+    @Test
+    void increaseTaskImportance_TaskDoesntExist_TaskImportanceDoesntGetIncreasedAndReturnFalse() {
     }
 
     // listTasksBy()
     @Test
-    void listTasksBy() {
+    void listTasksBy_DefaultOrder_TeasksGetReturnedInExpectedOrder() {
+    }
+
+    @Test
+    void listTasksBy_ReverseOrder_TeasksGetReturnedInExpectedOrder() {
+    }
+
+    @Test
+    void listTasksBy_ImportanceOrder_TeasksGetReturnedInExpectedOrder() {
+    }
+
+    @Test
+    void listTasksBy_UrgencyOrder_TeasksGetReturnedInExpectedOrder() {
     }
 
     // deserializeTasks()
     @Test
-    void deserializeTasks() {
+    void deserializeTasks_FileToReadFromExists_ReturnListOfTasks() {
+    }
+
+    @Test
+    void deserializeTasks_FileToReadFromDoesntExist_ReturnNull() {
     }
 
     // saveTasks()
     @Test
-    void saveTasks() {
+    void saveTasks_EmptyList_SavesEmptyListAndReturnTrue() {
+    }
+
+    @Test
+    void saveTasks_PopulatedListWithTaskObjects_SavesListAndReturnTrue() {
+    }
+
+    @Test
+    void saveTasks_PopulatedListWithSomeNullValuesObjects_Unknown() {
+    }
+
+    // findTask()
+    @Test
+    void findTask_TaskWithSameNameDoesntExist_ReturnNull() {
+        
+    }
+
+    @Test
+    void findTask_TaskWithSameNameAndSameCaseExists_ReturnTask() {
+        final String TASK_NAME = "Delete System32";
+        Task task = new Task(TASK_NAME);
+
+        assertEquals(task, prioritizer.findTask(TASK_NAME));
+    }
+
+    @Test
+    void findTask_TaskWithSameNameAndDifferentCaseExists_ReturnTask() {
+        final String TASK_NAME = "DELETE System32";
+        Task task = new Task(TASK_NAME);
+
+        assertEquals(task, prioritizer.findTask(TASK_NAME));
     }
 }
