@@ -35,7 +35,7 @@ public class Prioritizer {
         return false;
     }
 
-    public Task findTask(String taskName) {
+    public Task findTask(String taskName, List<Task> tasks) {
         return null;
     }
 
