@@ -32,22 +32,56 @@ class PrioritizerUnitTests {
         writeDefaultMockToFile();
     }
 
-    // addTask()
+    // addTask(String taskName)
     @Test
-    void addTask_ExistsATaskWithSameNameAndSameCase_DoesntGetAddedAndReturnFalse() {
+    void addTask_ExistsATaskWithSameNameAndSameCase_DoesntGetAdded() {
+        final String NAME_ALREADY_IN_LIST = generateTaskList().get(getRandomIndex(generateTaskList())).getName();
 
+        assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
+                prioritizer.addTask(NAME_ALREADY_IN_LIST));
     }
 
     @Test
-    void addTask_TaskNameIsEmpty_DoesntGetAddedAndReturnFalse() {
+    void addTask_TaskNameIsEmpty_DoesntGetAdded() {
+        assertEquals("class Prioritizer: [FAILURE] Task name is empty. Task wasn't added.",
+                prioritizer.addTask(""));
     }
 
     @Test
-    void addTask_ExistsATaskWithSameNameAndDifferentCase_DoesntGetAddedAndReturnFalse() {
+    void addTask_ExistsATaskWithSameNameAndDifferentCase_DoesntGetAdded() {
+        final String NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE = generateTaskList()
+                .get(getRandomIndex(generateTaskList())).getName().toUpperCase();
+
+        assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
+                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE));
     }
 
     @Test
-    void addTask_DoesntExistATaskWithSameName_GetsAddedAndReturnTrue() {
+    void addTask_DoesntExistATaskWithSameName_GetsAdded() {
+        assertEquals("class Prioritizer: [SUCCESS] Task added successfully.",
+                prioritizer.addTask("Make my bed"));
+    }
+
+    // addTask(String taskName, int urgencyScore, int importanceScore)
+    @Test
+    void addTask2_TaskNameIsEmpty_DoesntGetAdded() {
+        assertEquals("class Prioritizer: [FAILURE] Task name is empty. Task wasn't added.",
+                prioritizer.addTask("", randomInt(100), randomInt(100)));
+    }
+
+    @Test
+    void addTask2_ExistsATaskWithSameNameAndDifferentCase_DoesntGetAdded() {
+        final String NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE = generateTaskList()
+                .get(getRandomIndex(generateTaskList())).getName().toUpperCase();
+
+        assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
+                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE, randomInt(100), randomInt(100)));
+    }
+
+    @Test
+    void addTask2_DoesntExistATaskWithSameName_GetsAdded() {
+        assertEquals("class Prioritizer: [SUCCESS] Task added successfully.",
+                prioritizer.addTask("Make my bed", randomInt(100), randomInt(100)));
     }
 
     // deleteTask()
@@ -180,18 +214,22 @@ class PrioritizerUnitTests {
 
     List<Task> generateTaskList() {
         return Arrays.asList(
-                new Task("task1"),
-                new Task("task2"),
-                new Task("task3"),
-                new Task("task4"),
-                new Task("task5"),
-                new Task("task6"),
-                new Task("task7"),
-                new Task("task8")
+                new Task("Task1", 75, 70),
+                new Task("Task2", 30, 31),
+                new Task("Task3", 56, 30),
+                new Task("Task4", 49, 4),
+                new Task("Task5", 45, 87),
+                new Task("Task6", 93, 40),
+                new Task("Task7", 23, 3),
+                new Task("Task8", 29, 24)
         );
     }
 
     int getRandomIndex(List list) {
         return (int) (Math.random() * list.size());
+    }
+
+    int randomInt(int maxNum) {
+        return (int) (Math.random() * maxNum) + 1;
     }
 }

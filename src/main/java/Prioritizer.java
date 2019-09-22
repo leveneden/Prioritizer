@@ -19,27 +19,31 @@ public class Prioritizer {
         this.tasksFilePath = tasksFilePath;
     }
 
-    public boolean addTask(String taskName) {
-        return false;
+    public String addTask(String taskName, int urgencyScore, int importanceScore) {
+        return "";
     }
 
-    public boolean deleteTask(String taskName) {
-        return false;
+    public String addTask(String taskName) {
+        return "";
     }
 
-    public boolean increaseTaskUrgency(String taskName, int urgencyDelta) {
-        return false;
+    public String deleteTask(String taskName) {
+        return "";
     }
 
-    public boolean increaseTaskImportance(String taskName, int importanceDelta) {
-        return false;
+    public String increaseTaskUrgency(String taskName, int urgencyDelta) {
+        return "";
+    }
+
+    public String increaseTaskImportance(String taskName, int importanceDelta) {
+        return "";
     }
 
     public Task findTask(String taskName, List<Task> tasks) {
         return null;
     }
 
-    public void listTasksBy(SearchCriteria criteria) {
+    public String listTasksBy(SearchCriteria criteria) {
 
         List<Task> tasks = deserializeTasks();
 
@@ -56,6 +60,7 @@ public class Prioritizer {
             case IMPORTANCE:
                 break;
         }
+        return "";
     }
 
 
@@ -74,14 +79,14 @@ public class Prioritizer {
         }
     }
 
-    public boolean saveTasks(List<Task> tasks) {
+    public String saveTasks(List<Task> tasks) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             mapper.writeValue(new File(tasksFilePath), tasks);
-            return true;
+            return this.getClass() + ": Tasks saved succesfully!";
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return this.getClass() + ": Tasks couldn't get saved.";
         }
     }
 }
