@@ -80,35 +80,78 @@ class PrioritizerUnitTests {
 
     @Test
     void addTask2_DoesntExistATaskWithSameName_GetsAdded() {
-        assertEquals("class Prioritizer: [SUCCESS] Task added successfully.",
+        assertEquals("class Prioritizer: [SUCCESS] Task successfully added.",
                 prioritizer.addTask("Make my bed", randomInt(100), randomInt(100)));
     }
 
     // deleteTask()
     @Test
-    void deleteTask_TaskExists_ReturnTrueAndGetsDeleted() {
+    void deleteTask_TaskExists_TaskGetsDeleted() {
+        assertEquals("class Prioritizer: [SUCCESS] Task successfully deleted.",
+                prioritizer.addTask("Task5"));
     }
 
     @Test
-    void deleteTask_TaskDoesntExist_ReturnFalse() {
+    void deleteTask_TaskDoesntExist_DoesntGetDeleted() {
+        assertEquals("class Prioritizer: [FAILURE] Task wasn't found in your tasks. " +
+                        "Deleting a nonexistent task is redundant.",
+                prioritizer.addTask("nonexistent task"));
     }
 
     // increaseTaskUrgency()
     @Test
-    void increaseTaskUrgency_TaskExists_TaskUrgencyGetsIncreasedByDeltaAndReturnTrue() {
+    void increaseTaskUrgency_ValidCase_TaskUrgencyGetsIncreasedByDelta() {
+        assertEquals("class Prioritizer: [SUCCESS] Task urgency score successfully increased.",
+                prioritizer.increaseTaskUrgency("Task4", randomInt(100)));
     }
 
     @Test
-    void increaseTaskUrgency_TaskDoesntExist_TaskUrgencyDoesntGetIncreasedAndReturnFalse() {
+    void increaseTaskUrgency_TaskDoesntExist_TaskUrgencyDoesntGetIncreased() {
+        assertEquals("class Prioritizer: [FAILURE] Task wasn't found in your tasks. " +
+                        "Task urgency score wasn't increased.",
+                prioritizer.increaseTaskUrgency("nonexistent task", randomInt(100)));
+    }
+
+    @Test
+    void increaseTaskUrgency_UrgencyDeltaIsLessThanZero_TaskUrgencyDoesntGetIncreased() {
+        assertEquals("class Prioritizer: [FAILURE] Urgency delta is less than 0. " +
+                        "Task urgency score wasn't increased.",
+                prioritizer.increaseTaskUrgency("Task4", -1));
+    }
+
+    @Test
+    void increaseTaskUrgency_UrgencyDeltaIsGreaterThanOneHundred_TaskUrgencyDoesntGetIncreased() {
+        assertEquals("class Prioritizer: [FAILURE] Urgency delta is greater than 100. " +
+                        "Task urgency score wasn't increased.",
+                prioritizer.increaseTaskUrgency("Task4", 101));
     }
 
     // increaseTaskImportance()
     @Test
-    void increaseTaskImportance_TaskExists_TaskImportanceGetsIncreasedByDeltaAndReturnTrue() {
+    void increaseTaskImportance_ValidCase_TaskImportanceGetsIncreasedByDelta() {
+        assertEquals("class Prioritizer: [SUCCESS] Task importance score successfully increased.",
+                prioritizer.increaseTaskImportance("Task4", randomInt(100)));
     }
 
     @Test
-    void increaseTaskImportance_TaskDoesntExist_TaskImportanceDoesntGetIncreasedAndReturnFalse() {
+    void increaseTaskImportance_TaskDoesntExist_TaskImportanceDoesntGetIncreased() {
+        assertEquals("class Prioritizer: [FAILURE] Task wasn't found in your tasks. " +
+                        "Task importance score wasn't increased.",
+                prioritizer.increaseTaskImportance("nonexistent task", randomInt(100)));
+    }
+
+    @Test
+    void increaseTaskImportance_ImportanceDeltaIsLessThanZero_TaskImportanceDoesntGetIncreased() {
+        assertEquals("class Prioritizer: [FAILURE] Importance delta is less than 0. " +
+                        "Task importance score wasn't increased.",
+                prioritizer.increaseTaskImportance("Task4", -1));
+    }
+
+    @Test
+    void increaseTaskImportance_ImportanceDeltaIsGreaterThanOneHundred_TaskImportanceDoesntGetIncreased() {
+        assertEquals("class Prioritizer: [FAILURE] Importance delta is greater than 100. " +
+                        "Task importance score wasn't increased.",
+                prioritizer.increaseTaskImportance("Task4", 101));
     }
 
     // listTasksBy()
