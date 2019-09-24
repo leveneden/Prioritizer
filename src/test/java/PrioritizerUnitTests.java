@@ -21,6 +21,46 @@ class PrioritizerUnitTests {
 
     private Prioritizer prioritizer;
 
+    private final String TASKS_LISTED_IN_ORDER = "" +
+            "1. {\"name\":\"Task1\", \"urgencyScore\":75, \"importanceScore\":70}\n" +
+            "2. {\"name\":\"Task2\", \"urgencyScore\":30, \"importanceScore\":31}\n" +
+            "3. {\"name\":\"Task3\", \"urgencyScore\":56, \"importanceScore\":30}\n" +
+            "4. {\"name\":\"Task4\", \"urgencyScore\":49, \"importanceScore\":4}\n" +
+            "5. {\"name\":\"Task5\", \"urgencyScore\":45, \"importanceScore\":87}\n" +
+            "6. {\"name\":\"Task6\", \"urgencyScore\":93, \"importanceScore\":40}\n" +
+            "7. {\"name\":\"Task7\", \"urgencyScore\":23, \"importanceScore\":3}\n" +
+            "8. {\"name\":\"Task8\", \"urgencyScore\":29, \"importanceScore\":24}\n";
+
+    private final String TASKS_LISTED_IN_REVERSE_ORDER = "" +
+            "1. {\"name\":\"Task8\", \"urgencyScore\":29, \"importanceScore\":24}\n" +
+            "2. {\"name\":\"Task7\", \"urgencyScore\":23, \"importanceScore\":3}\n" +
+            "3. {\"name\":\"Task6\", \"urgencyScore\":93, \"importanceScore\":40}\n" +
+            "4. {\"name\":\"Task5\", \"urgencyScore\":45, \"importanceScore\":87}\n" +
+            "5. {\"name\":\"Task4\", \"urgencyScore\":49, \"importanceScore\":4}\n" +
+            "6. {\"name\":\"Task3\", \"urgencyScore\":56, \"importanceScore\":30}\n" +
+            "7. {\"name\":\"Task2\", \"urgencyScore\":30, \"importanceScore\":31}\n" +
+            "8. {\"name\":\"Task1\", \"urgencyScore\":75, \"importanceScore\":70}\n";
+
+    private final String TASKS_LISTED_BY_IMPORTANCE = "" +
+            "1. {\"name\":\"Task5\", \"urgencyScore\":45, \"importanceScore\":87}\n" +
+            "2. {\"name\":\"Task1\", \"urgencyScore\":75, \"importanceScore\":70}\n" +
+            "3. {\"name\":\"Task6\", \"urgencyScore\":93, \"importanceScore\":40}\n" +
+            "4. {\"name\":\"Task2\", \"urgencyScore\":30, \"importanceScore\":31}\n" +
+            "5. {\"name\":\"Task3\", \"urgencyScore\":56, \"importanceScore\":30}\n" +
+            "6. {\"name\":\"Task8\", \"urgencyScore\":29, \"importanceScore\":24}\n" +
+            "7. {\"name\":\"Task4\", \"urgencyScore\":49, \"importanceScore\":4}\n" +
+            "8. {\"name\":\"Task7\", \"urgencyScore\":23, \"importanceScore\":3}\n";
+
+    private final String TASKS_LISTED_BY_URGENCY = "" +
+            "1. {\"name\":\"Task6\", \"urgencyScore\":93, \"importanceScore\":40}\n" +
+            "2. {\"name\":\"Task1\", \"urgencyScore\":75, \"importanceScore\":70}\n" +
+            "3. {\"name\":\"Task3\", \"urgencyScore\":56, \"importanceScore\":30}\n" +
+            "4. {\"name\":\"Task4\", \"urgencyScore\":49, \"importanceScore\":4}\n" +
+            "5. {\"name\":\"Task5\", \"urgencyScore\":45, \"importanceScore\":87}\n" +
+            "6. {\"name\":\"Task2\", \"urgencyScore\":30, \"importanceScore\":31}\n" +
+            "7. {\"name\":\"Task8\", \"urgencyScore\":29, \"importanceScore\":24}\n" +
+            "8. {\"name\":\"Task7\", \"urgencyScore\":23, \"importanceScore\":3}\n";
+
     @BeforeEach
     void setUp() {
         prioritizer = new Prioritizer("src/test/resources/tasksMock.json");
@@ -38,13 +78,13 @@ class PrioritizerUnitTests {
         final String NAME_ALREADY_IN_LIST = generateTaskList().get(getRandomIndex(generateTaskList())).getName();
 
         assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
-                prioritizer.addTask(NAME_ALREADY_IN_LIST));
+                prioritizer.addTask(NAME_ALREADY_IN_LIST, generateTaskList()));
     }
 
     @Test
     void addTask_TaskNameIsEmpty_DoesntGetAdded() {
         assertEquals("class Prioritizer: [FAILURE] Task name is empty. Task wasn't added.",
-                prioritizer.addTask(""));
+                prioritizer.addTask("", generateTaskList()));
     }
 
     @Test
@@ -53,20 +93,20 @@ class PrioritizerUnitTests {
                 .get(getRandomIndex(generateTaskList())).getName().toUpperCase();
 
         assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
-                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE));
+                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE, generateTaskList()));
     }
 
     @Test
     void addTask_DoesntExistATaskWithSameName_GetsAdded() {
         assertEquals("class Prioritizer: [SUCCESS] Task added successfully.",
-                prioritizer.addTask("Make my bed"));
+                prioritizer.addTask("Make my bed", generateTaskList()));
     }
 
     // addTask(String taskName, int urgencyScore, int importanceScore)
     @Test
     void addTask2_TaskNameIsEmpty_DoesntGetAdded() {
         assertEquals("class Prioritizer: [FAILURE] Task name is empty. Task wasn't added.",
-                prioritizer.addTask("", randomInt(100), randomInt(100)));
+                prioritizer.addTask("", randomInt(100), randomInt(100), generateTaskList()));
     }
 
     @Test
@@ -75,100 +115,104 @@ class PrioritizerUnitTests {
                 .get(getRandomIndex(generateTaskList())).getName().toUpperCase();
 
         assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
-                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE, randomInt(100), randomInt(100)));
+                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE, randomInt(100), randomInt(100), generateTaskList()));
     }
 
     @Test
     void addTask2_DoesntExistATaskWithSameName_GetsAdded() {
         assertEquals("class Prioritizer: [SUCCESS] Task successfully added.",
-                prioritizer.addTask("Make my bed", randomInt(100), randomInt(100)));
+                prioritizer.addTask("Make my bed", randomInt(100), randomInt(100), generateTaskList()));
     }
 
     // deleteTask()
     @Test
     void deleteTask_TaskExists_TaskGetsDeleted() {
         assertEquals("class Prioritizer: [SUCCESS] Task successfully deleted.",
-                prioritizer.addTask("Task5"));
+                prioritizer.deleteTask("Task5", generateTaskList()));
     }
 
     @Test
     void deleteTask_TaskDoesntExist_DoesntGetDeleted() {
         assertEquals("class Prioritizer: [FAILURE] Task wasn't found in your tasks. " +
                         "Deleting a nonexistent task is redundant.",
-                prioritizer.addTask("nonexistent task"));
+                prioritizer.deleteTask("nonexistent task", generateTaskList()));
     }
 
     // increaseTaskUrgency()
     @Test
     void increaseTaskUrgency_ValidCase_TaskUrgencyGetsIncreasedByDelta() {
         assertEquals("class Prioritizer: [SUCCESS] Task urgency score successfully increased.",
-                prioritizer.increaseTaskUrgency("Task4", randomInt(100)));
+                prioritizer.increaseTaskUrgency("Task4", randomInt(100), generateTaskList()));
     }
 
     @Test
     void increaseTaskUrgency_TaskDoesntExist_TaskUrgencyDoesntGetIncreased() {
         assertEquals("class Prioritizer: [FAILURE] Task wasn't found in your tasks. " +
                         "Task urgency score wasn't increased.",
-                prioritizer.increaseTaskUrgency("nonexistent task", randomInt(100)));
+                prioritizer.increaseTaskUrgency("nonexistent task", randomInt(100), generateTaskList()));
     }
 
     @Test
     void increaseTaskUrgency_UrgencyDeltaIsLessThanZero_TaskUrgencyDoesntGetIncreased() {
         assertEquals("class Prioritizer: [FAILURE] Urgency delta is less than 0. " +
                         "Task urgency score wasn't increased.",
-                prioritizer.increaseTaskUrgency("Task4", -1));
+                prioritizer.increaseTaskUrgency("Task4", -1, generateTaskList()));
     }
 
     @Test
     void increaseTaskUrgency_UrgencyDeltaIsGreaterThanOneHundred_TaskUrgencyDoesntGetIncreased() {
         assertEquals("class Prioritizer: [FAILURE] Urgency delta is greater than 100. " +
                         "Task urgency score wasn't increased.",
-                prioritizer.increaseTaskUrgency("Task4", 101));
+                prioritizer.increaseTaskUrgency("Task4", 101, generateTaskList()));
     }
 
     // increaseTaskImportance()
     @Test
     void increaseTaskImportance_ValidCase_TaskImportanceGetsIncreasedByDelta() {
         assertEquals("class Prioritizer: [SUCCESS] Task importance score successfully increased.",
-                prioritizer.increaseTaskImportance("Task4", randomInt(100)));
+                prioritizer.increaseTaskImportance("Task4", randomInt(100), generateTaskList()));
     }
 
     @Test
     void increaseTaskImportance_TaskDoesntExist_TaskImportanceDoesntGetIncreased() {
         assertEquals("class Prioritizer: [FAILURE] Task wasn't found in your tasks. " +
                         "Task importance score wasn't increased.",
-                prioritizer.increaseTaskImportance("nonexistent task", randomInt(100)));
+                prioritizer.increaseTaskImportance("nonexistent task", randomInt(100), generateTaskList()));
     }
 
     @Test
     void increaseTaskImportance_ImportanceDeltaIsLessThanZero_TaskImportanceDoesntGetIncreased() {
         assertEquals("class Prioritizer: [FAILURE] Importance delta is less than 0. " +
                         "Task importance score wasn't increased.",
-                prioritizer.increaseTaskImportance("Task4", -1));
+                prioritizer.increaseTaskImportance("Task4", -1, generateTaskList()));
     }
 
     @Test
     void increaseTaskImportance_ImportanceDeltaIsGreaterThanOneHundred_TaskImportanceDoesntGetIncreased() {
         assertEquals("class Prioritizer: [FAILURE] Importance delta is greater than 100. " +
                         "Task importance score wasn't increased.",
-                prioritizer.increaseTaskImportance("Task4", 101));
+                prioritizer.increaseTaskImportance("Task4", 101, generateTaskList()));
     }
 
     // listTasksBy()
     @Test
     void listTasksBy_DefaultOrder_TeasksGetReturnedInExpectedOrder() {
+        assertEquals(TASKS_LISTED_IN_ORDER, prioritizer.listTasksBy(SearchCriteria.DEFAULT));
     }
 
     @Test
     void listTasksBy_ReverseOrder_TeasksGetReturnedInExpectedOrder() {
+        assertEquals(TASKS_LISTED_IN_REVERSE_ORDER, prioritizer.listTasksBy(SearchCriteria.REVERSE));
     }
 
     @Test
     void listTasksBy_ImportanceOrder_TeasksGetReturnedInExpectedOrder() {
+        assertEquals(TASKS_LISTED_BY_IMPORTANCE, prioritizer.listTasksBy(SearchCriteria.IMPORTANCE));
     }
 
     @Test
     void listTasksBy_UrgencyOrder_TeasksGetReturnedInExpectedOrder() {
+        assertEquals(TASKS_LISTED_BY_URGENCY, prioritizer.listTasksBy(SearchCriteria.URGENCY));
     }
 
     // deserializeTasks()
@@ -234,6 +278,17 @@ class PrioritizerUnitTests {
         List<Task> tasks = generateTaskList();
 
         assertNull(prioritizer.findTask("", tasks));
+    }
+
+    // listTasks()
+    @Test
+    void listTasks_ValidCase_ReturnTasksListedInOrderPassed() {
+        assertEquals(TASKS_LISTED_IN_ORDER, prioritizer.listTasks(generateTaskList()));
+    }
+
+    @Test
+    void listTasks_EmptyListGetsPassed_ReturnErrorMessage() {
+        assertEquals("Task list is empty.", prioritizer.listTasks(new ArrayList<Task>()));
     }
 
     // Utility Methods

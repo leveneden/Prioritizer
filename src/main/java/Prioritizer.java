@@ -19,23 +19,23 @@ public class Prioritizer {
         this.tasksFilePath = tasksFilePath;
     }
 
-    public String addTask(String taskName, int urgencyScore, int importanceScore) {
+    public String addTask(String taskName, int urgencyScore, int importanceScore, List<Task> tasks) {
         return "";
     }
 
-    public String addTask(String taskName) {
+    public String addTask(String taskName, List<Task> tasks) {
         return "";
     }
 
-    public String deleteTask(String taskName) {
+    public String deleteTask(String taskName, List<Task> tasks) {
         return "";
     }
 
-    public String increaseTaskUrgency(String taskName, int urgencyDelta) {
+    public String increaseTaskUrgency(String taskName, int urgencyDelta, List<Task> tasks) {
         return "";
     }
 
-    public String increaseTaskImportance(String taskName, int importanceDelta) {
+    public String increaseTaskImportance(String taskName, int importanceDelta, List<Task> tasks) {
         return "";
     }
 
@@ -88,5 +88,9 @@ public class Prioritizer {
             e.printStackTrace();
             return this.getClass() + ": Tasks couldn't get saved.";
         }
+    }
+
+    public String listTasks(List<Task> tasks) {
+        return "";
     }
 }
