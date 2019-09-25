@@ -75,102 +75,166 @@ class PrioritizerUnitTests {
     // addTask(String taskName)
     @Test
     void addTask_ExistsATaskWithSameNameAndSameCase_DoesntGetAdded() {
-        final String NAME_ALREADY_IN_LIST = generateTaskList().get(getRandomIndex(generateTaskList())).getName();
+        List<Task> tasks = generateTaskList();
+        final String NAME_ALREADY_IN_LIST = tasks.get(getRandomIndex(tasks)).getName();
 
+        assertEquals(1, tasks.stream().filter(t -> t.getName().equals(NAME_ALREADY_IN_LIST)).count());
         assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
-                prioritizer.addTask(NAME_ALREADY_IN_LIST, generateTaskList()));
+                prioritizer.addTask(NAME_ALREADY_IN_LIST, tasks));
+        assertEquals(1, tasks.stream().filter(t -> t.getName().equals(NAME_ALREADY_IN_LIST)).count());
     }
 
     @Test
     void addTask_TaskNameIsEmpty_DoesntGetAdded() {
+        List<Task> tasks = generateTaskList();
+
         assertEquals("class Prioritizer: [FAILURE] Task name is empty. Task wasn't added.",
-                prioritizer.addTask("", generateTaskList()));
+                prioritizer.addTask("", tasks));
+        assertEquals(0, tasks.stream().filter(t -> t.getName().equals("")).count());
     }
 
     @Test
     void addTask_ExistsATaskWithSameNameAndDifferentCase_DoesntGetAdded() {
-        final String NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE = generateTaskList()
-                .get(getRandomIndex(generateTaskList())).getName().toUpperCase();
+        List<Task> tasks = generateTaskList();
+        final String NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE = tasks
+                .get(getRandomIndex(tasks)).getName().toUpperCase();
 
         assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
-                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE, generateTaskList()));
+                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE, tasks));
+        assertEquals(0,
+                tasks.stream().filter(t -> t.getName().equals(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE)).count());
     }
 
     @Test
     void addTask_DoesntExistATaskWithSameName_GetsAdded() {
+        List<Task> tasks = generateTaskList();
+        final String TASK_NAME = "Make my bed";
+
+        assertEquals(0, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
         assertEquals("class Prioritizer: [SUCCESS] Task added successfully.",
-                prioritizer.addTask("Make my bed", generateTaskList()));
+                prioritizer.addTask(TASK_NAME, tasks));
+        assertEquals(1, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
     }
 
     // addTask(String taskName, int urgencyScore, int importanceScore)
     @Test
     void addTask2_TaskNameIsEmpty_DoesntGetAdded() {
+        List<Task> tasks = generateTaskList();
+
         assertEquals("class Prioritizer: [FAILURE] Task name is empty. Task wasn't added.",
-                prioritizer.addTask("", randomInt(100), randomInt(100), generateTaskList()));
+                prioritizer.addTask("", randomInt(100), randomInt(100), tasks));
+        assertEquals(0, tasks.stream().filter(t -> t.getName().equals("")).count());
     }
 
     @Test
     void addTask2_ExistsATaskWithSameNameAndDifferentCase_DoesntGetAdded() {
-        final String NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE = generateTaskList()
-                .get(getRandomIndex(generateTaskList())).getName().toUpperCase();
+        List<Task> tasks = generateTaskList();
+        final String NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE = tasks
+                .get(getRandomIndex(tasks)).getName().toUpperCase();
 
         assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
-                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE, randomInt(100), randomInt(100), generateTaskList()));
+                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE, randomInt(100), randomInt(100), tasks));
+        assertEquals(0,
+                tasks.stream().filter(t -> t.getName().equals(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE)).count());
     }
 
     @Test
     void addTask2_DoesntExistATaskWithSameName_GetsAdded() {
+        List<Task> tasks = generateTaskList();
+        final String TASK_NAME = "Make my bed";
+
+        assertEquals(0, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
         assertEquals("class Prioritizer: [SUCCESS] Task successfully added.",
-                prioritizer.addTask("Make my bed", randomInt(100), randomInt(100), generateTaskList()));
+                prioritizer.addTask(TASK_NAME, randomInt(100), randomInt(100), tasks));
+        assertEquals(1, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
     }
 
     // deleteTask()
     @Test
     void deleteTask_TaskExists_TaskGetsDeleted() {
+        List<Task> tasks = generateTaskList();
+        final String TASK_NAME = tasks.get(getRandomIndex(tasks)).getName();
+
+        assertEquals(1, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
         assertEquals("class Prioritizer: [SUCCESS] Task successfully deleted.",
-                prioritizer.deleteTask("Task5", generateTaskList()));
+                prioritizer.deleteTask(TASK_NAME, tasks));
+        assertEquals(0, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
     }
 
     @Test
     void deleteTask_TaskDoesntExist_DoesntGetDeleted() {
+        List<Task> tasks = generateTaskList();
+        final String TASK_NAME = "nonexistent task";
+
+        assertEquals(0, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
         assertEquals("class Prioritizer: [FAILURE] Task wasn't found in your tasks. " +
                         "Deleting a nonexistent task is redundant.",
-                prioritizer.deleteTask("nonexistent task", generateTaskList()));
+                prioritizer.deleteTask(TASK_NAME, tasks));
+        assertEquals(0, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
     }
 
     // increaseTaskUrgency()
     @Test
     void increaseTaskUrgency_ValidCase_TaskUrgencyGetsIncreasedByDelta() {
+        List<Task> tasks = generateTaskList();
+        Task randomTask = tasks.get(getRandomIndex(tasks));
+        final String TASK_NAME = randomTask.getName();
+        final int URGENCY_SCORE = randomTask.getUrgencyScore();
+        final int URGENCY_DELTA = randomInt(100);
+
         assertEquals("class Prioritizer: [SUCCESS] Task urgency score successfully increased.",
-                prioritizer.increaseTaskUrgency("Task4", randomInt(100), generateTaskList()));
+                prioritizer.increaseTaskUrgency(TASK_NAME, URGENCY_DELTA, tasks));
+        assertEquals(URGENCY_SCORE + URGENCY_DELTA, randomTask.getUrgencyScore());
     }
 
     @Test
     void increaseTaskUrgency_TaskDoesntExist_TaskUrgencyDoesntGetIncreased() {
+        List<Task> tasks = generateTaskList();
+
         assertEquals("class Prioritizer: [FAILURE] Task wasn't found in your tasks. " +
                         "Task urgency score wasn't increased.",
-                prioritizer.increaseTaskUrgency("nonexistent task", randomInt(100), generateTaskList()));
+                prioritizer.increaseTaskUrgency("nonexistent task", randomInt(100), tasks));
     }
 
     @Test
     void increaseTaskUrgency_UrgencyDeltaIsLessThanZero_TaskUrgencyDoesntGetIncreased() {
+        List<Task> tasks = generateTaskList();
+        Task randomTask = tasks.get(getRandomIndex(tasks));
+        final String TASK_NAME = randomTask.getName();
+        final int URGENCY_SCORE = randomTask.getUrgencyScore();
+
         assertEquals("class Prioritizer: [FAILURE] Urgency delta is less than 0. " +
                         "Task urgency score wasn't increased.",
-                prioritizer.increaseTaskUrgency("Task4", -1, generateTaskList()));
+                prioritizer.increaseTaskUrgency(TASK_NAME, -1, tasks));
+        assertEquals(URGENCY_SCORE, randomTask.getUrgencyScore());
     }
 
     @Test
     void increaseTaskUrgency_UrgencyDeltaIsGreaterThanOneHundred_TaskUrgencyDoesntGetIncreased() {
+        List<Task> tasks = generateTaskList();
+        Task randomTask = tasks.get(getRandomIndex(tasks));
+        final String TASK_NAME = randomTask.getName();
+        final int URGENCY_SCORE = randomTask.getUrgencyScore();
+
         assertEquals("class Prioritizer: [FAILURE] Urgency delta is greater than 100. " +
                         "Task urgency score wasn't increased.",
-                prioritizer.increaseTaskUrgency("Task4", 101, generateTaskList()));
+                prioritizer.increaseTaskUrgency(TASK_NAME, 101, tasks));
+        assertEquals(URGENCY_SCORE, randomTask.getUrgencyScore());
     }
 
     // increaseTaskImportance()
     @Test
     void increaseTaskImportance_ValidCase_TaskImportanceGetsIncreasedByDelta() {
+        List<Task> tasks = generateTaskList();
+        Task randomTask = tasks.get(getRandomIndex(tasks));
+        final String TASK_NAME = randomTask.getName();
+        final int IMPORTANCE_SCORE = randomTask.getImportanceScore();
+        final int IMPORTANCE_DELTA = randomInt(100);
+
         assertEquals("class Prioritizer: [SUCCESS] Task importance score successfully increased.",
-                prioritizer.increaseTaskImportance("Task4", randomInt(100), generateTaskList()));
+                prioritizer.increaseTaskImportance(TASK_NAME, IMPORTANCE_DELTA, tasks));
+        assertEquals(IMPORTANCE_SCORE + IMPORTANCE_DELTA, randomTask.getUrgencyScore());
+
     }
 
     @Test
@@ -182,16 +246,28 @@ class PrioritizerUnitTests {
 
     @Test
     void increaseTaskImportance_ImportanceDeltaIsLessThanZero_TaskImportanceDoesntGetIncreased() {
+        List<Task> tasks = generateTaskList();
+        Task randomTask = tasks.get(getRandomIndex(tasks));
+        final String TASK_NAME = randomTask.getName();
+        final int IMPORTANCE_SCORE = randomTask.getImportanceScore();
+
         assertEquals("class Prioritizer: [FAILURE] Importance delta is less than 0. " +
                         "Task importance score wasn't increased.",
-                prioritizer.increaseTaskImportance("Task4", -1, generateTaskList()));
+                prioritizer.increaseTaskImportance(TASK_NAME, -1, tasks));
+        assertEquals(IMPORTANCE_SCORE, randomTask.getImportanceScore());
     }
 
     @Test
     void increaseTaskImportance_ImportanceDeltaIsGreaterThanOneHundred_TaskImportanceDoesntGetIncreased() {
+        List<Task> tasks = generateTaskList();
+        Task randomTask = tasks.get(getRandomIndex(tasks));
+        final String TASK_NAME = randomTask.getName();
+        final int IMPORTANCE_SCORE = randomTask.getImportanceScore();
+
         assertEquals("class Prioritizer: [FAILURE] Importance delta is greater than 100. " +
                         "Task importance score wasn't increased.",
-                prioritizer.increaseTaskImportance("Task4", 101, generateTaskList()));
+                prioritizer.increaseTaskImportance(TASK_NAME, 101, tasks));
+        assertEquals(IMPORTANCE_SCORE, randomTask.getImportanceScore());
     }
 
     // listTasksBy()
@@ -246,8 +322,7 @@ class PrioritizerUnitTests {
     @Test
     void findTask_TaskWithSameNameAndSameCaseExists_ReturnTask() {
         List<Task> tasks = generateTaskList();
-        int randomIndex = getRandomIndex(tasks);
-        Task taskToBeFound = tasks.get(randomIndex);
+        Task taskToBeFound = tasks.get(getRandomIndex(tasks));
         final String TASK_NAME = taskToBeFound.getName();
 
         assertEquals(taskToBeFound, prioritizer.findTask(TASK_NAME, tasks));
@@ -256,8 +331,7 @@ class PrioritizerUnitTests {
     @Test
     void findTask_TaskWithSameNameAndDifferentCaseExists_ReturnTask() {
         List<Task> tasks = generateTaskList();
-        int randomIndex = getRandomIndex(tasks);
-        Task taskToBeFound = tasks.get(randomIndex);
+        Task taskToBeFound = tasks.get(getRandomIndex(tasks));
         final String TASK_NAME_WITH_DIFFERENT_CASE = taskToBeFound.getName().toUpperCase();
 
         assertEquals(taskToBeFound, prioritizer.findTask(TASK_NAME_WITH_DIFFERENT_CASE, tasks));
@@ -275,9 +349,7 @@ class PrioritizerUnitTests {
 
     @Test
     void findTask_TaskNamePassedIsEmpty_ReturnNull() {
-        List<Task> tasks = generateTaskList();
-
-        assertNull(prioritizer.findTask("", tasks));
+        assertNull(prioritizer.findTask("", generateTaskList()));
     }
 
     // listTasks()
