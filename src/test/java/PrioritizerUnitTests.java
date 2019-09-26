@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
 
 class PrioritizerUnitTests {
 
@@ -111,7 +112,7 @@ class PrioritizerUnitTests {
         final String TASK_NAME = "Make my bed";
 
         assertEquals(0, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
-        assertEquals("class Prioritizer: [SUCCESS] Task added successfully.",
+        assertEquals("class Prioritizer: [SUCCESS] Task successfully added.",
                 prioritizer.addTask(TASK_NAME, tasks));
         assertEquals(1, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
     }
@@ -233,7 +234,7 @@ class PrioritizerUnitTests {
 
         assertEquals("class Prioritizer: [SUCCESS] Task importance score successfully increased.",
                 prioritizer.increaseTaskImportance(TASK_NAME, IMPORTANCE_DELTA, tasks));
-        assertEquals(IMPORTANCE_SCORE + IMPORTANCE_DELTA, randomTask.getUrgencyScore());
+        assertEquals(IMPORTANCE_SCORE + IMPORTANCE_DELTA, randomTask.getImportanceScore());
 
     }
 
@@ -273,21 +274,29 @@ class PrioritizerUnitTests {
     // listTasksBy()
     @Test
     void listTasksBy_DefaultOrder_TeasksGetReturnedInExpectedOrder() {
+        prioritizer = spy(prioritizer);
+        when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
         assertEquals(TASKS_LISTED_IN_ORDER, prioritizer.listTasksBy(SearchCriteria.DEFAULT));
     }
 
     @Test
     void listTasksBy_ReverseOrder_TeasksGetReturnedInExpectedOrder() {
+        prioritizer = spy(prioritizer);
+        when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
         assertEquals(TASKS_LISTED_IN_REVERSE_ORDER, prioritizer.listTasksBy(SearchCriteria.REVERSE));
     }
 
     @Test
     void listTasksBy_ImportanceOrder_TeasksGetReturnedInExpectedOrder() {
+        prioritizer = spy(prioritizer);
+        when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
         assertEquals(TASKS_LISTED_BY_IMPORTANCE, prioritizer.listTasksBy(SearchCriteria.IMPORTANCE));
     }
 
     @Test
     void listTasksBy_UrgencyOrder_TeasksGetReturnedInExpectedOrder() {
+        prioritizer = spy(prioritizer);
+        when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
         assertEquals(TASKS_LISTED_BY_URGENCY, prioritizer.listTasksBy(SearchCriteria.URGENCY));
     }
 
@@ -360,7 +369,7 @@ class PrioritizerUnitTests {
 
     @Test
     void listTasks_EmptyListGetsPassed_ReturnErrorMessage() {
-        assertEquals("Task list is empty.", prioritizer.listTasks(new ArrayList<Task>()));
+        assertEquals("class Prioritizer: [FAILURE] Task list is empty.", prioritizer.listTasks(new ArrayList<Task>()));
     }
 
     // Utility Methods
@@ -383,7 +392,7 @@ class PrioritizerUnitTests {
     }
 
     List<Task> generateTaskList() {
-        return Arrays.asList(
+        return new ArrayList<>(Arrays.asList(
                 new Task("Task1", 75, 70),
                 new Task("Task2", 30, 31),
                 new Task("Task3", 56, 30),
@@ -392,7 +401,7 @@ class PrioritizerUnitTests {
                 new Task("Task6", 93, 40),
                 new Task("Task7", 23, 3),
                 new Task("Task8", 29, 24)
-        );
+        ));
     }
 
     int getRandomIndex(List list) {
