@@ -81,7 +81,7 @@ class PrioritizerUnitTests {
 
         assertEquals(1, tasks.stream().filter(t -> t.getName().equals(NAME_ALREADY_IN_LIST)).count());
         assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
-                prioritizer.addTask(NAME_ALREADY_IN_LIST, tasks));
+                prioritizer.addTask(NAME_ALREADY_IN_LIST));
         assertEquals(1, tasks.stream().filter(t -> t.getName().equals(NAME_ALREADY_IN_LIST)).count());
     }
 
@@ -90,7 +90,7 @@ class PrioritizerUnitTests {
         List<Task> tasks = generateTaskList();
 
         assertEquals("class Prioritizer: [FAILURE] Task name is empty. Task wasn't added.",
-                prioritizer.addTask("", tasks));
+                prioritizer.addTask(""));
         assertEquals(0, tasks.stream().filter(t -> t.getName().equals("")).count());
     }
 
@@ -101,7 +101,7 @@ class PrioritizerUnitTests {
                 .get(getRandomIndex(tasks)).getName().toUpperCase();
 
         assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
-                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE, tasks));
+                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE));
         assertEquals(0,
                 tasks.stream().filter(t -> t.getName().equals(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE)).count());
     }
@@ -113,7 +113,7 @@ class PrioritizerUnitTests {
 
         assertEquals(0, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
         assertEquals("class Prioritizer: [SUCCESS] Task successfully added.",
-                prioritizer.addTask(TASK_NAME, tasks));
+                prioritizer.addTask(TASK_NAME));
         assertEquals(1, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
     }
 
@@ -123,7 +123,7 @@ class PrioritizerUnitTests {
         List<Task> tasks = generateTaskList();
 
         assertEquals("class Prioritizer: [FAILURE] Task name is empty. Task wasn't added.",
-                prioritizer.addTask("", randomInt(100), randomInt(100), tasks));
+                prioritizer.addTask("", randomInt(100), randomInt(100)));
         assertEquals(0, tasks.stream().filter(t -> t.getName().equals("")).count());
     }
 
@@ -134,7 +134,7 @@ class PrioritizerUnitTests {
                 .get(getRandomIndex(tasks)).getName().toUpperCase();
 
         assertEquals("class Prioritizer: [FAILURE] A task with the same name exists. Task wasn't added.",
-                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE, randomInt(100), randomInt(100), tasks));
+                prioritizer.addTask(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE, randomInt(100), randomInt(100)));
         assertEquals(0,
                 tasks.stream().filter(t -> t.getName().equals(NAME_ALREADY_IN_LIST_BUT_WITH_DIFFERENT_CASE)).count());
     }
@@ -146,7 +146,7 @@ class PrioritizerUnitTests {
 
         assertEquals(0, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
         assertEquals("class Prioritizer: [SUCCESS] Task successfully added.",
-                prioritizer.addTask(TASK_NAME, randomInt(100), randomInt(100), tasks));
+                prioritizer.addTask(TASK_NAME, randomInt(100), randomInt(100)));
         assertEquals(1, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
     }
 
@@ -158,7 +158,7 @@ class PrioritizerUnitTests {
 
         assertEquals(1, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
         assertEquals("class Prioritizer: [SUCCESS] Task successfully deleted.",
-                prioritizer.deleteTask(TASK_NAME, tasks));
+                prioritizer.deleteTask(TASK_NAME));
         assertEquals(0, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
     }
 
@@ -170,7 +170,7 @@ class PrioritizerUnitTests {
         assertEquals(0, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
         assertEquals("class Prioritizer: [FAILURE] Task wasn't found in your tasks. " +
                         "Deleting a nonexistent task is redundant.",
-                prioritizer.deleteTask(TASK_NAME, tasks));
+                prioritizer.deleteTask(TASK_NAME));
         assertEquals(0, tasks.stream().filter(t -> t.getName().equals(TASK_NAME)).count());
     }
 
@@ -184,7 +184,7 @@ class PrioritizerUnitTests {
         final int URGENCY_DELTA = randomInt(100);
 
         assertEquals("class Prioritizer: [SUCCESS] Task urgency score successfully increased.",
-                prioritizer.increaseTaskUrgency(TASK_NAME, URGENCY_DELTA, tasks));
+                prioritizer.increaseTaskUrgency(TASK_NAME, URGENCY_DELTA));
         assertEquals(URGENCY_SCORE + URGENCY_DELTA, randomTask.getUrgencyScore());
     }
 
@@ -194,7 +194,7 @@ class PrioritizerUnitTests {
 
         assertEquals("class Prioritizer: [FAILURE] Task wasn't found in your tasks. " +
                         "Task urgency score wasn't increased.",
-                prioritizer.increaseTaskUrgency("nonexistent task", randomInt(100), tasks));
+                prioritizer.increaseTaskUrgency("nonexistent task", randomInt(100)));
     }
 
     @Test
@@ -206,7 +206,7 @@ class PrioritizerUnitTests {
 
         assertEquals("class Prioritizer: [FAILURE] Urgency delta is less than 0. " +
                         "Task urgency score wasn't increased.",
-                prioritizer.increaseTaskUrgency(TASK_NAME, -1, tasks));
+                prioritizer.increaseTaskUrgency(TASK_NAME, -1));
         assertEquals(URGENCY_SCORE, randomTask.getUrgencyScore());
     }
 
@@ -219,7 +219,7 @@ class PrioritizerUnitTests {
 
         assertEquals("class Prioritizer: [FAILURE] Urgency delta is greater than 100. " +
                         "Task urgency score wasn't increased.",
-                prioritizer.increaseTaskUrgency(TASK_NAME, 101, tasks));
+                prioritizer.increaseTaskUrgency(TASK_NAME, 101));
         assertEquals(URGENCY_SCORE, randomTask.getUrgencyScore());
     }
 
@@ -233,7 +233,7 @@ class PrioritizerUnitTests {
         final int IMPORTANCE_DELTA = randomInt(100);
 
         assertEquals("class Prioritizer: [SUCCESS] Task importance score successfully increased.",
-                prioritizer.increaseTaskImportance(TASK_NAME, IMPORTANCE_DELTA, tasks));
+                prioritizer.increaseTaskImportance(TASK_NAME, IMPORTANCE_DELTA));
         assertEquals(IMPORTANCE_SCORE + IMPORTANCE_DELTA, randomTask.getImportanceScore());
 
     }
@@ -242,7 +242,7 @@ class PrioritizerUnitTests {
     void increaseTaskImportance_TaskDoesntExist_TaskImportanceDoesntGetIncreased() {
         assertEquals("class Prioritizer: [FAILURE] Task wasn't found in your tasks. " +
                         "Task importance score wasn't increased.",
-                prioritizer.increaseTaskImportance("nonexistent task", randomInt(100), generateTaskList()));
+                prioritizer.increaseTaskImportance("nonexistent task", randomInt(100)));
     }
 
     @Test
@@ -254,7 +254,7 @@ class PrioritizerUnitTests {
 
         assertEquals("class Prioritizer: [FAILURE] Importance delta is less than 0. " +
                         "Task importance score wasn't increased.",
-                prioritizer.increaseTaskImportance(TASK_NAME, -1, tasks));
+                prioritizer.increaseTaskImportance(TASK_NAME, -1));
         assertEquals(IMPORTANCE_SCORE, randomTask.getImportanceScore());
     }
 
@@ -267,7 +267,7 @@ class PrioritizerUnitTests {
 
         assertEquals("class Prioritizer: [FAILURE] Importance delta is greater than 100. " +
                         "Task importance score wasn't increased.",
-                prioritizer.increaseTaskImportance(TASK_NAME, 101, tasks));
+                prioritizer.increaseTaskImportance(TASK_NAME, 101));
         assertEquals(IMPORTANCE_SCORE, randomTask.getImportanceScore());
     }
 
