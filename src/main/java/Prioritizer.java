@@ -24,7 +24,10 @@ public class Prioritizer {
         this.tasksFilePath = tasksFilePath;
     }
 
-    public String addTask(String taskName, int urgencyScore, int importanceScore, List<Task> tasks) {
+    public String addTask(String taskName, int urgencyScore, int importanceScore) {
+
+        List<Task> tasks = deserializeTasks();
+
         if (taskName.equals(""))
             return getClass() + ": [FAILURE] Task name is empty. Task wasn't added.";
 
@@ -32,19 +35,23 @@ public class Prioritizer {
             return getClass() + ": [FAILURE] A task with the same name exists. Task wasn't added.";
         } else {
             tasks.add(new Task(taskName, urgencyScore, importanceScore));
+            saveTasks(tasks);
             return getClass() + ": [SUCCESS] Task successfully added.";
         }
     }
 
-    public String addTask(String taskName, List<Task> tasks) {
-        return addTask(taskName, 0, 0, tasks);
+    public String addTask(String taskName) {
+        return addTask(taskName, 0, 0);
     }
 
-    public String deleteTask(String taskName, List<Task> tasks) {
+    public String deleteTask(String taskName) {
+
+        List<Task> tasks = deserializeTasks();
         Task task = findTask(taskName, tasks);
 
         if (task != null) {
             tasks.remove(task);
+            saveTasks(tasks);
             return getClass() + ": [SUCCESS] Task successfully deleted.";
         } else {
             return getClass() + ": [FAILURE] Task wasn't found in your tasks. " +
@@ -52,7 +59,9 @@ public class Prioritizer {
         }
     }
 
-    public String increaseTaskUrgency(String taskName, int urgencyDelta, List<Task> tasks) {
+    public String increaseTaskUrgency(String taskName, int urgencyDelta) {
+
+        List<Task> tasks = deserializeTasks();
 
         if (urgencyDelta > 100)
             return getClass() + ": [FAILURE] Urgency delta is greater than 100. Task urgency score wasn't increased.";
@@ -66,11 +75,15 @@ public class Prioritizer {
             return getClass() + ": [FAILURE] Task wasn't found in your tasks. Task urgency score wasn't increased.";
         } else {
             task.setUrgencyScore(task.getUrgencyScore() + urgencyDelta);
+            saveTasks(tasks);
             return getClass() + ": [SUCCESS] Task urgency score successfully increased.";
         }
     }
 
-    public String increaseTaskImportance(String taskName, int importanceDelta, List<Task> tasks) {
+    public String increaseTaskImportance(String taskName, int importanceDelta) {
+
+        List<Task> tasks = deserializeTasks();
+
         if (importanceDelta > 100)
             return getClass() + ": [FAILURE] Importance delta is greater than 100. Task importance score wasn't increased.";
 
@@ -82,8 +95,8 @@ public class Prioritizer {
         if (task == null) {
             return getClass() + ": [FAILURE] Task wasn't found in your tasks. Task importance score wasn't increased.";
         } else {
-
             task.setImportanceScore(task.getImportanceScore() + importanceDelta);
+            saveTasks(tasks);
             return getClass() + ": [SUCCESS] Task importance score successfully increased.";
         }
     }
