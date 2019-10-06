@@ -275,28 +275,28 @@ class PrioritizerUnitTests {
     @Test
     void listTasksBy_DefaultOrder_TeasksGetReturnedInExpectedOrder() {
         prioritizer = spy(prioritizer);
-        when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
+        //when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
         assertEquals(TASKS_LISTED_IN_ORDER, prioritizer.listTasksBy(SearchCriteria.DEFAULT));
     }
 
     @Test
     void listTasksBy_ReverseOrder_TeasksGetReturnedInExpectedOrder() {
         prioritizer = spy(prioritizer);
-        when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
+        //when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
         assertEquals(TASKS_LISTED_IN_REVERSE_ORDER, prioritizer.listTasksBy(SearchCriteria.REVERSE));
     }
 
     @Test
     void listTasksBy_ImportanceOrder_TeasksGetReturnedInExpectedOrder() {
         prioritizer = spy(prioritizer);
-        when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
+        //when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
         assertEquals(TASKS_LISTED_BY_IMPORTANCE, prioritizer.listTasksBy(SearchCriteria.IMPORTANCE));
     }
 
     @Test
     void listTasksBy_UrgencyOrder_TeasksGetReturnedInExpectedOrder() {
         prioritizer = spy(prioritizer);
-        when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
+        //when(prioritizer.deserializeTasks()).thenReturn(generateTaskList());
         assertEquals(TASKS_LISTED_BY_URGENCY, prioritizer.listTasksBy(SearchCriteria.URGENCY));
     }
 

@@ -101,7 +101,7 @@ public class Prioritizer {
         }
     }
 
-    public Task findTask(String taskName, List<Task> tasks) {
+    Task findTask(String taskName, List<Task> tasks) {
         if (tasks != null && tasks.stream().anyMatch(t -> t.getName().toLowerCase().equals(taskName.toLowerCase())))
             return tasks.stream().filter(t -> t.getName().toLowerCase().equals(taskName.toLowerCase())).findFirst().get();
         return null;
@@ -156,7 +156,7 @@ public class Prioritizer {
         }
     }
 
-    public String saveTasks(List<Task> tasks) {
+    private String saveTasks(List<Task> tasks) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             mapper.writeValue(new File(tasksFilePath), tasks);
