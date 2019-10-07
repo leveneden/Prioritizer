@@ -82,7 +82,76 @@ public class ConsoleUI {
 
     private void listTasks() {
 
+        boolean answerIsValid = false;
+        int optionSelectedIndex = -1;
 
+        do {
+            System.out.println("Would you like to list your tasks in a certain order?");
+            System.out.println("1. Yes.");
+            System.out.println("2. No.");
+
+            String selectedOptionInput = scanner.nextLine();
+
+            try {
+                 optionSelectedIndex = Integer.parseInt(selectedOptionInput);
+            } catch (NumberFormatException e) {
+                System.out.println(INVALID_NUMBER_OPTION);
+            }
+
+            if (optionSelectedIndex < 1 || optionSelectedIndex > 2) {
+                System.out.println(INVALID_NUMBER_OPTION);
+            } else {
+                answerIsValid = true;
+            }
+        } while (!answerIsValid);
+
+        answerIsValid = false;
+        int optionSelectedIndex2 = -1;
+
+        switch (optionSelectedIndex) {
+            case 1:
+                do {
+                    System.out.println("By which order would you like to list your tasks?");
+                    System.out.println("1. Oldest first.");
+                    System.out.println("2. Newest first.");
+                    System.out.println("3. Highest urgency first.");
+                    System.out.println("4. Highest Importance first.");
+
+                    String optionSelectedInput = scanner.nextLine();
+
+                    try {
+                        optionSelectedIndex2 = Integer.parseInt(optionSelectedInput);
+                    } catch (NumberFormatException e) {
+                        System.out.println(INVALID_NUMBER_OPTION);
+                    }
+
+                    if (optionSelectedIndex2 < 1 || optionSelectedIndex2 > 4) {
+                        System.out.println(INVALID_NUMBER_OPTION);
+                    } else {
+                        answerIsValid = true;
+                    }
+
+                } while (!answerIsValid);
+
+                switch (optionSelectedIndex2) {
+                    case 1:
+                        System.out.println(prioritizer.listTasksBy(SearchCriteria.DEFAULT));
+                        break;
+                    case 2:
+                        System.out.println(prioritizer.listTasksBy(SearchCriteria.REVERSE));
+                        break;
+                    case 3:
+                        System.out.println(prioritizer.listTasksBy(SearchCriteria.URGENCY));
+                        break;
+                    case 4:
+                        System.out.println(prioritizer.listTasksBy(SearchCriteria.IMPORTANCE));
+                        break;
+                }
+                break;
+            case 2:
+                System.out.println(prioritizer.listTasksBy(SearchCriteria.DEFAULT));
+                break;
+        }
     }
 
     private void reviewTasks() {
@@ -225,7 +294,7 @@ public class ConsoleUI {
                 if (parsedInput < 0 || parsedInput > 100) {
                     System.out.println(INVALID_NUMBER_RANGE_FOR_SCORE);
                 } else {
-                    urgencyScore = parsedInput;
+                    importanceScore = parsedInput;
                     answerIsValid = true;
                 }
             } catch (NumberFormatException e) {
